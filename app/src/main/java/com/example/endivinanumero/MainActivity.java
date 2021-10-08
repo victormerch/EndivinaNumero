@@ -17,9 +17,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+//==Tareas pendientes==
+//-Segundo activity
 public class MainActivity extends AppCompatActivity {
     private int intentos;
+    private int numero;
     private boolean isOn = false;
     private int mili =0,seg = 0, min =0;
     private Handler h = new Handler();
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        int numero = (int)(Math.random()*100+1);
+        numero = (int)(Math.random()*100+1);
         intentos = 0;
 
         TextView cronom = (TextView) findViewById(R.id.crono2);
@@ -111,10 +113,11 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("-Numero random: "+numero+"\n-Numero ecogido: "+numero2);
                     //Comprobamos si coincide con el numero random de entre el 1 al 100
                     if (numero==numero2){
+                        numero = (int)(Math.random()*100+1);
                         isOn = false;
                         aviso.setTextColor(Color.GREEN);
                         aviso.setText("Numero Correcto!");
-                        intentos = 0;
+
 
                         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
@@ -127,8 +130,10 @@ public class MainActivity extends AppCompatActivity {
 
                         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Editable value = input.getText();
-                                // Do something with value!
+                                Editable nameUser = input.getText();
+
+                                RankingActivity ra = new RankingActivity();
+                                //ra.onCreate();
                             }
                         });
 
@@ -140,6 +145,12 @@ public class MainActivity extends AppCompatActivity {
 
                         alert.show();
 
+                        //Reseteo de variables
+                        textIntent.setText("0");
+                        intentos = 0;
+                        mili =0;
+                        seg = 0;
+                        min =0;
 
                     }else{
                         intentos++;
@@ -165,9 +176,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
 }
+class RankingActivity extends AppCompatActivity {
+    protected void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.ranking_activity);
+    }
+}
