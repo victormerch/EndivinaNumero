@@ -20,11 +20,14 @@ import android.widget.Toast;
 //==Tareas pendientes==
 //-Segundo activity
 public class MainActivity extends AppCompatActivity {
+    public static final String EXTRA_MESSAGE = "con.example.endivinanumero";
     private int intentos;
     private int numero;
     private boolean isOn = false;
     private int mili =0,seg = 0, min =0;
+    private String m ="",s = "",mi="";
     private Handler h = new Handler();
+    private Editable nameUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -35,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
         numero = (int)(Math.random()*100+1);
         intentos = 0;
-
+        mili =0;
+        seg = 0;
+        min =0;
         TextView cronom = (TextView) findViewById(R.id.crono2);
         //Algoritmo del cronometro
         Thread cronos = new Thread(new Runnable() {
@@ -114,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     //Comprobamos si coincide con el numero random de entre el 1 al 100
                     if (numero==numero2){
                         numero = (int)(Math.random()*100+1);
-                        isOn = false;
+
                         aviso.setTextColor(Color.GREEN);
                         aviso.setText("Numero Correcto!");
 
@@ -130,10 +135,14 @@ public class MainActivity extends AppCompatActivity {
 
                         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Editable nameUser = input.getText();
+                                nameUser = input.getText();
+                                System.out.println(nameUser.toString());
+                                Intent intent = new Intent (v.getContext(), RankingActivity.class);
+                                intentos ++;
+                                String message = String.valueOf(nameUser.toString()+" "+intentos+" "+min+" "+seg+" "+mili);
+                                intent.putExtra(EXTRA_MESSAGE, message);
+                                startActivityForResult(intent, 0);
 
-                                RankingActivity ra = new RankingActivity();
-                                //ra.onCreate();
                             }
                         });
 
@@ -146,11 +155,12 @@ public class MainActivity extends AppCompatActivity {
                         alert.show();
 
                         //Reseteo de variables
+                        aviso.setText("");
                         textIntent.setText("0");
-                        intentos = 0;
-                        mili =0;
-                        seg = 0;
-                        min =0;
+                        isOn = false;
+
+
+
 
                     }else{
                         intentos++;
@@ -177,10 +187,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 }
-class RankingActivity extends AppCompatActivity {
-    protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.ranking_activity);
-    }
-}
