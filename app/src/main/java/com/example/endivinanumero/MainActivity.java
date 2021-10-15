@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("-Numero random: "+numero+"\n-Numero ecogido: "+numero2);
                     //Comprobamos si coincide con el numero random de entre el 1 al 100
                     if (numero==numero2){
-                        numero = (int)(Math.random()*100+1);
+
 
                         aviso.setTextColor(Color.GREEN);
                         aviso.setText("Numero Correcto!");
@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
 
                         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
-                        alert.setTitle("Input Name");
-                        alert.setMessage("Introduce tu nombre para que se vea en el ranking:");
+                        alert.setTitle("Has Guanyat!");
+                        alert.setMessage("-Numero secret: "+numero+"\n-Numero de intents: "+String.valueOf(intentos+1)+"\nIntrodueix el teu nom per afegirlo al ranking:");
 
                         // Set an EditText view to get user input
                         final EditText input = new EditText(MainActivity.this);
@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
                         alert.show();
 
                         //Reseteo de variables
+                        numero = (int)(Math.random()*100+1);
                         aviso.setText("");
                         textIntent.setText("0");
                         isOn = false;
