@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 //==Tareas pendientes==
@@ -100,6 +101,17 @@ public class MainActivity extends AppCompatActivity {
         final Button button = findViewById(R.id.button);
         final TextView aviso = (TextView) findViewById(R.id.aviso);
         final TextView textIntent = (TextView) findViewById(R.id.textIntent);
+        final Switch s = (Switch) findViewById(R.id.switch1);
+        s.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (s.isChecked()){
+                    cronom.setVisibility(View.INVISIBLE);
+                }else{
+                    cronom.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         textIntent.setText(String.valueOf(intentos));
         button.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     //Comprobamos si coincide con el numero random de entre el 1 al 100
                     if (numero==numero2){
 
-
+                        isOn = false;
                         aviso.setTextColor(Color.GREEN);
                         aviso.setText("Numero Correcto!");
 
@@ -127,7 +139,10 @@ public class MainActivity extends AppCompatActivity {
                         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
                         alert.setTitle("Has Guanyat!");
-                        alert.setMessage("-Numero secret: "+numero+"\n-Numero de intents: "+String.valueOf(intentos+1)+"\nIntrodueix el teu nom per afegirlo al ranking:");
+                        alert.setMessage("-Numero secret: "+numero+
+                                "\n-Numero de intents: "+String.valueOf(intentos+1)+
+                                "\n-Temps: "+min+":"+seg+":"+mili+
+                                "\nIntrodueix el teu nom per afegirlo al ranking:");
 
                         // Set an EditText view to get user input
                         final EditText input = new EditText(MainActivity.this);
@@ -158,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         numero = (int)(Math.random()*100+1);
                         aviso.setText("");
                         textIntent.setText("0");
-                        isOn = false;
+
 
 
 
@@ -168,9 +183,9 @@ public class MainActivity extends AppCompatActivity {
                         textIntent.setText(String.valueOf(intentos));
                         aviso.setTextColor(Color.RED);
                         if (numero2<numero){
-                            aviso.setText("El numero es mas grande que "+ numero2);
+                            aviso.setText("El numero secret es mes gran que "+ numero2);
                         }else{
-                            aviso.setText("El numero es mas pequeño que "+ numero2);
+                            aviso.setText("El numero secret es mes petit que "+ numero2);
                         }
 
                     }

@@ -84,10 +84,6 @@ public class RankingActivity extends AppCompatActivity {
         // Afegim alguns exemples
         for(int x = 0; x< users.size();x++) {
             records.add(new Record(intents.get(x), users.get(x)));
-            records.add(new Record(intents.get(x), users.get(x)));
-            records.add(new Record(intents.get(x), users.get(x)));
-            records.add(new Record(intents.get(x), users.get(x)));
-            records.add(new Record(intents.get(x), users.get(x)));
 
         }
 
