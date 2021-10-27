@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         numero = (int)(Math.random()*100+1);
         intentos = 0;
         mili =0;
