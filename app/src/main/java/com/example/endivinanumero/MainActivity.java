@@ -2,22 +2,36 @@ package com.example.endivinanumero;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+
+
 //==Tareas pendientes==
 //-Segundo activity
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
     private String m ="",s = "",mi="";
     private Handler h = new Handler();
     private Editable nameUser;
+    private Intent intent;
+    private Button btnCamera;
+    private ImageView iv;
+    private String currentPhotoPath;
+    private File image = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -148,13 +167,21 @@ public class MainActivity extends AppCompatActivity {
 
                         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+
                                 nameUser = input.getText();
                                 System.out.println(nameUser.toString());
-                                Intent intent = new Intent (v.getContext(), RankingActivity.class);
+                                intent = new Intent (v.getContext(), RankingActivity.class);
                                 intentos ++;
-                                String message = String.valueOf(nameUser.toString()+" "+intentos+" "+min+" "+seg+" "+mili);
-                                intent.putExtra(EXTRA_MESSAGE, message);
-                                startActivityForResult(intent, 0);
+                                try {
+                                    abrirCamara();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+//                                String message = String.valueOf(nameUser.toString()+" "+intentos+" "+min+" "+seg+" "+mili);
+//                                intent.putExtra(EXTRA_MESSAGE, message);
+//
+//                                startActivity(intent);
 
                             }
                         });
@@ -171,9 +198,6 @@ public class MainActivity extends AppCompatActivity {
                         numero = (int)(Math.random()*100+1);
                         aviso.setText("");
                         textIntent.setText("0");
-
-
-
 
 
                     }else{
@@ -199,6 +223,71 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
     }
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        }
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+    private void abrirCamara() throws IOException {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+
+        // Create the File where the photo should go
+
+        File photoFile = createImageFile();
+        // Continue only if the File was successfully created
+
+        Uri photoURI = FileProvider.getUriForFile(this,
+                "com.victormerch.android.fileprovider",
+                photoFile);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+        startActivityForResult(takePictureIntent, 1);
+        System.out.println("Si entra en la camara");
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Intent intent = new Intent (v.getContext(), RankingActivity.class);
+        intentos ++;
+        try {
+            abrirCamara();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String message = String.valueOf(nameUser.toString()+" "+intentos+" "+min+" "+seg+" "+mili);
+        intent.putExtra(EXTRA_MESSAGE, message);
+
+        startActivity(intent);
+//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+//            Bundle extras = data.getExtras();
+//            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//            imageView.setImageBitmap(imageBitmap);
+//        }
+    }
+
+
+
 }
+
+
 
