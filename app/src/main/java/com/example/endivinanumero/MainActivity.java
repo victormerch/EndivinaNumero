@@ -268,12 +268,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Intent intent = new Intent (v.getContext(), RankingActivity.class);
         intentos ++;
-        try {
-            abrirCamara();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         String message = String.valueOf(nameUser.toString()+" "+intentos+" "+min+" "+seg+" "+mili);
         intent.putExtra(EXTRA_MESSAGE, message);
 

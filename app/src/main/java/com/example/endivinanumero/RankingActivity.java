@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -27,7 +28,9 @@ public class RankingActivity extends AppCompatActivity {
     static private ArrayList<Integer> min = new ArrayList<Integer>();
     static private ArrayList<Integer> seg = new ArrayList<Integer>();
     static private ArrayList<Integer> mili = new ArrayList<Integer>();
-
+    //static private ArrayList<Integer> mili = new ArrayList<Integer>();
+    private ImageView iv;
+    private File image = null;
     class Record {
         public int intents;
         public String nom;
@@ -117,47 +120,52 @@ public class RankingActivity extends AppCompatActivity {
         lv.setAdapter(adapter);
 
     }
-//    public void onWindowFocusChanged(boolean hasFocus) {
-//        super.onWindowFocusChanged(hasFocus);
-//        if (hasFocus) {
-//
-//            // Get the dimensions of the View
-//            int targetW = iv.getWidth();
-//            int targetH = iv.getHeight();
-//
-//            // Get the dimensions of the bitmap
-//            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-//            bmOptions.inJustDecodeBounds = true;
-//            File path = this.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//
-//            if (image == null){
-//                image = getFile();
-//            }
-//            BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
-//
-//
-//            int photoW = bmOptions.outWidth;
-//            int photoH = bmOptions.outHeight;
-//
-//            // Determine how much to scale down the image
-//            int scaleFactor = Math.max(1, Math.min(photoW/targetW, photoH/targetH));
-//
-//            // Decode the image file into a Bitmap sized to fill the View
-//            bmOptions.inJustDecodeBounds = false;
-//            bmOptions.inSampleSize = scaleFactor;
-//            bmOptions.inPurgeable = true;
-//
-//            Bitmap bitmap = null;
-//
-//
-//            bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
-//
-//
-//            iv.setImageBitmap(bitmap);
-//
-//        }
-//
-//    }
+    protected File getFile(){
+        File path = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File photo = new File(path,"imatge.jpg");
+        return photo;
+    }
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+
+            // Get the dimensions of the View
+            int targetW = iv.getWidth();
+            int targetH = iv.getHeight();
+
+            // Get the dimensions of the bitmap
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inJustDecodeBounds = true;
+            File path = this.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+            if (image == null){
+                image = getFile();
+            }
+            BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+
+
+            int photoW = bmOptions.outWidth;
+            int photoH = bmOptions.outHeight;
+
+            // Determine how much to scale down the image
+            int scaleFactor = Math.max(1, Math.min(photoW/targetW, photoH/targetH));
+
+            // Decode the image file into a Bitmap sized to fill the View
+            bmOptions.inJustDecodeBounds = false;
+            bmOptions.inSampleSize = scaleFactor;
+            bmOptions.inPurgeable = true;
+
+            Bitmap bitmap = null;
+
+
+            bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+
+
+            iv.setImageBitmap(bitmap);
+
+        }
+
+    }
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
 //        Uri fileUri = null;
