@@ -7,27 +7,28 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="47dp"
+        android:layout_width="59dp"
+        android:layout_height="151dp"
         android:layout_weight="1"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@drawable/fondo" />
 
     <TextView
         android:id="@+id/nom"
         android:layout_width="80dp"
-        android:layout_height="49dp"
+        android:layout_height="151dp"
         android:layout_weight="1"
         android:text="Nom"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="24sp" />
 
     <TextView
         android:id="@+id/intents"
         android:layout_width="118dp"
-        android:layout_height="45dp"
+        android:layout_height="151dp"
         android:text="Intents"
+        android:textAlignment="center"
         android:textColor="#000000"
-        android:textSize="20sp" />
+        android:textSize="24sp" />
 
 </LinearLayout>

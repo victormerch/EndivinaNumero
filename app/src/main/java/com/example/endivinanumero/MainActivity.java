@@ -3,14 +3,10 @@ package com.example.endivinanumero;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.DialogFragment;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
@@ -152,47 +148,8 @@ public class MainActivity extends AppCompatActivity {
                         aviso.setTextColor(Color.GREEN);
                         aviso.setText("Numero Correcto!");
 
-
-                        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-
-                        alert.setTitle("Has Guanyat!");
-                        alert.setMessage("-Numero secret: "+numero+
-                                "\n-Numero de intents: "+String.valueOf(intentos+1)+
-                                "\n-Temps: "+min+":"+seg+":"+mili+
-                                "\nIntrodueix el teu nom per afegirlo al ranking:");
-
-                        // Set an EditText view to get user input
-                        final EditText input = new EditText(MainActivity.this);
-                        alert.setView(input);
-
-                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-
-                                nameUser = input.getText();
-                                System.out.println(nameUser.toString());
-                                intent = new Intent (v.getContext(), RankingActivity.class);
-                                intentos ++;
-                                try {
-                                    abrirCamara();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-//                                String message = String.valueOf(nameUser.toString()+" "+intentos+" "+min+" "+seg+" "+mili);
-//                                intent.putExtra(EXTRA_MESSAGE, message);
-//
-//                                startActivity(intent);
-
-                            }
-                        });
-
-                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // Canceled.
-                            }
-                        });
-
-                        alert.show();
+                        intent = new Intent (v.getContext(), RankingActivity.class);
+                        createDialog(intent);
 
                         //Reseteo de variables
                         numero = (int)(Math.random()*100+1);
@@ -224,6 +181,42 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+    private void createDialog(Intent intent){
+        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+
+        alert.setTitle("Has Guanyat!");
+        alert.setMessage("-Numero secret: "+numero+
+                "\n-Numero de intents: "+String.valueOf(intentos+1)+
+                "\n-Temps: "+min+":"+seg+":"+mili+
+                "\nIntrodueix el teu nom per afegirlo al ranking:");
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(MainActivity.this);
+        alert.setView(input);
+        alert.setCancelable(false);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                nameUser = input.getText();
+                if(!nameUser.toString().isEmpty()){
+                    //System.out.println(nameUser.toString());
+
+                    intentos ++;
+                    try {
+                        abrirCamara();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(),"No pots posar el nom en blanc",Toast.LENGTH_SHORT).show();
+                    createDialog(intent);
+                }
+
+            }
+        });
+
+        alert.show();
     }
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -265,10 +258,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Uri fileUri = null;
+        System.out.println("---Image:"+image.toString());
+//        fileUri = Uri.fromFile(image);
 
         //Intent intent = new Intent (v.getContext(), RankingActivity.class);
         intentos ++;
-        String message = String.valueOf(nameUser.toString()+" "+intentos+" "+min+" "+seg+" "+mili);
+        String message = String.valueOf(nameUser.toString()+" "+intentos+" "+min+" "+seg+" "+mili+" "+image.toString());
         intent.putExtra(EXTRA_MESSAGE, message);
 
         startActivity(intent);

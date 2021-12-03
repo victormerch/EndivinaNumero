@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,16 +29,18 @@ public class RankingActivity extends AppCompatActivity {
     static private ArrayList<Integer> min = new ArrayList<Integer>();
     static private ArrayList<Integer> seg = new ArrayList<Integer>();
     static private ArrayList<Integer> mili = new ArrayList<Integer>();
-    //static private ArrayList<Integer> mili = new ArrayList<Integer>();
-    private ImageView iv;
+    static private ArrayList<Uri> uris = new ArrayList<Uri>();
+
     private File image = null;
     class Record {
         public int intents;
         public String nom;
+        public Uri foto;
 
-        public Record(int _intents, String _nom ) {
+        public Record(int _intents, String _nom, Uri uri) {
             intents = _intents;
             nom = _nom;
+            foto = uri;
         }
     }
     // Model = Taula de records: utilitzem ArrayList
@@ -50,14 +53,14 @@ public class RankingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ranking);
 
         final TextView sms = (TextView) findViewById(R.id.message);
-        String[] newUser = new String[5];
+        String[] newUser = new String[6];
         newUser = getIntent().getStringExtra(MainActivity.EXTRA_MESSAGE).split( " ");
         users.add(newUser[0]);
         intents.add(Integer.parseInt(newUser[1]));
         min.add(Integer.parseInt(newUser[2]));
         seg.add(Integer.parseInt(newUser[3]));
         mili.add(Integer.parseInt(newUser[4]));
-
+        uris.add(Uri.fromFile(new File(newUser[5])));
         //Ordenacion por intentos
         int i, j, aux;
         for (i = 0; i < intents.size() - 1; i++) {
@@ -85,6 +88,10 @@ public class RankingActivity extends AppCompatActivity {
                     mili.set(j + 1,mili.get(j));
                     mili.set(j,mili.get(aux));
 
+                    Uri aux3 = uris.get(j + 1);
+                    uris.set(j + 1,uris.get(j));
+                    uris.set(j,uris.get(aux));
+
                 }
             }
         }
@@ -92,7 +99,7 @@ public class RankingActivity extends AppCompatActivity {
         records = new ArrayList<Record>();
         // Afegim alguns exemples
         for(int x = 0; x< users.size();x++) {
-            records.add(new Record(intents.get(x), users.get(x)));
+            records.add(new Record(intents.get(x), users.get(x),uris.get(x)));
 
         }
 
@@ -110,6 +117,8 @@ public class RankingActivity extends AppCompatActivity {
                 // "Pintem" valors (també quan es refresca)
                 ((TextView) convertView.findViewById(R.id.nom)).setText(getItem(pos).nom);
                 ((TextView) convertView.findViewById(R.id.intents)).setText(Integer.toString(getItem(pos).intents));
+                ((ImageView) convertView.findViewById(R.id.imageView)).setImageURI(getItem(pos).foto);
+
                 return convertView;
             }
 
@@ -125,47 +134,47 @@ public class RankingActivity extends AppCompatActivity {
         File photo = new File(path,"imatge.jpg");
         return photo;
     }
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-
-            // Get the dimensions of the View
-            int targetW = iv.getWidth();
-            int targetH = iv.getHeight();
-
-            // Get the dimensions of the bitmap
-            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            bmOptions.inJustDecodeBounds = true;
-            File path = this.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-
-            if (image == null){
-                image = getFile();
-            }
-            BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
-
-
-            int photoW = bmOptions.outWidth;
-            int photoH = bmOptions.outHeight;
-
-            // Determine how much to scale down the image
-            int scaleFactor = Math.max(1, Math.min(photoW/targetW, photoH/targetH));
-
-            // Decode the image file into a Bitmap sized to fill the View
-            bmOptions.inJustDecodeBounds = false;
-            bmOptions.inSampleSize = scaleFactor;
-            bmOptions.inPurgeable = true;
-
-            Bitmap bitmap = null;
-
-
-            bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
-
-
-            iv.setImageBitmap(bitmap);
-
-        }
-
-    }
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus) {
+//
+//            // Get the dimensions of the View
+//            int targetW = iv.getWidth();
+//            int targetH = iv.getHeight();
+//
+//            // Get the dimensions of the bitmap
+//            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//            bmOptions.inJustDecodeBounds = true;
+//            File path = this.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//
+//            if (image == null){
+//                image = getFile();
+//            }
+//            BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+//
+//
+//            int photoW = bmOptions.outWidth;
+//            int photoH = bmOptions.outHeight;
+//
+//            // Determine how much to scale down the image
+//            int scaleFactor = Math.max(1, Math.min(photoW/targetW, photoH/targetH));
+//
+//            // Decode the image file into a Bitmap sized to fill the View
+//            bmOptions.inJustDecodeBounds = false;
+//            bmOptions.inSampleSize = scaleFactor;
+//            bmOptions.inPurgeable = true;
+//
+//            Bitmap bitmap = null;
+//
+//
+//            bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+//
+//
+//            iv.setImageBitmap(bitmap);
+//
+//        }
+//
+//    }
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
 //        Uri fileUri = null;
